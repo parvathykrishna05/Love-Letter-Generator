@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Letter Maker - Login/Signup</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUNhXzCzxCDzmzIIamQRh2hnXMD1KQFC-HRrzHhnKUo8zyuV-_joXZhtHP&s=10') no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+      position: relative;
+    }
+    .auth-container {
+      background: rgba(255, 245, 245, 0.9);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(255, 111, 97, 0.6);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid #ff9999;
+      animation: floatGlow 4s infinite ease-in-out;
+    }
+    @keyframes floatGlow {
+      0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 10px 30px rgba(255, 111, 97, 0.6); }
+      50% { transform: translate(-50%, -53%) scale(1.03); box-shadow: 0 15px 40px rgba(255, 111, 97, 0.8); }
+      100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 10px 30px rgba(255, 111, 97, 0.6); }
+    }
+    h1 {
+      color: #ff6f61;
+      font-family: 'Parisienne', cursive;
+      font-size: 40px;
+      margin-bottom: 25px;
+      text-shadow: 2px 2px 8px rgba(255, 111, 97, 0.4);
+    }
+    .input-group {
+      margin: 15px 0;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ff9999;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      color: #d94f46;
+      transition: all 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #ff4f41;
+      box-shadow: 0 0 10px rgba(255, 79, 65, 0.6);
+    }
+    button {
+      background: linear-gradient(45deg, #ff6f61, #ff9966);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      margin: 10px;
+      border-radius: 20px;
+      font-size: 16px;
+      font-family: 'Parisienne', cursive;
+      box-shadow: 0 5px 15px rgba(255, 111, 97, 0.5);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 111, 97, 0.7);
+    }
+    .toggle-text {
+      color: #ff6f61;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: color 0.3s;
+    }
+    .toggle-text:hover {
+      color: #ff4f41;
+    }
+    .hearts {
+      position: absolute;
+      color: #ff9999;
+      font-size: 30px;
+      opacity: 0.6;
+      animation: drift 8s infinite linear;
+    }
+    @keyframes drift {
+      0% { transform: translateY(100vh); }
+      100% { transform: translateY(-100vh); }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <h1 id="auth-title">Login</h1>
+    <div class="input-group">
+      <input id="username" type="text" placeholder="Your Name" required>
+    </div>
+    <div class="input-group">
+      <input id="password" type="password" placeholder="Your Password" required>
+    </div>
+    <button id="auth-button" onclick="handleAuth()">Let’s Go</button>
+    <div class="toggle-text" onclick="toggleAuthMode()">New here? Sign Up!</div>
+  </div>
+  <span class="hearts" style="left: 10%;">♥</span>
+  <span class="hearts" style="left: 30%; animation-delay: 2s;">♥</span>
+  <span class="hearts" style="left: 50%; animation-delay: 4s;">♥</span>
+  <span class="hearts" style="left: 70%; animation-delay: 6s;">♥</span>
+  <span class="hearts" style="left: 90%; animation-delay: 8s;">♥</span>
+
+  <script>
+    let isLoginMode = true;
+
+    function toggleAuthMode() {
+      isLoginMode = !isLoginMode;
+      document.getElementById("auth-title").textContent = isLoginMode ? "Login" : "Sign Up";
+      document.getElementById("auth-button").textContent = isLoginMode ? "Let’s Go" : "Join In";
+      document.querySelector(".toggle-text").textContent = isLoginMode ? "New here? Sign Up!" : "Got an account? Login!";
+    }
+
+    function handleAuth() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      if (!username || !password) {
+        alert("Fill in your name and password, buddy!");
+        return;
+      }
+      if (isLoginMode) {
+        const storedUser = localStorage.getItem(username);
+        if (storedUser && JSON.parse(storedUser).password === password) {
+          localStorage.setItem("currentUser", username);
+          window.location.href = "generator.html";
+        } else {
+          alert("Wrong name or password, try again!");
+        }
+      } else {
+        if (localStorage.getItem(username)) {
+          alert("That name’s taken already!");
+        } else {
+          localStorage.setItem(username, JSON.stringify({ password, letters: [] }));
+          localStorage.setItem("currentUser", username);
+          window.location.href = "generator.html";
+        }
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Letter Maker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Parisienne&family=Roboto:wght@300&family=Comic+Neue:wght@400;700&family=Times+New+Roman&family=Caveat:wght@400;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUxR-pQfI_bMGgev3EGwVzpZ7z2_6RWKIHAzEBF-oFPfW1KgNvqDSbczk&s=10') no-repeat center center fixed;
+      background-size: cover;
+      overflow-y: auto;
+      font-family: 'Roboto', sans-serif;
+      position: relative;
+    }
+    .container {
+      background: rgba(255, 245, 245, 0.9);
+      padding: 50px;
+      border-radius: 25px;
+      box-shadow: 0 15px 40px rgba(167, 22, 8, 0.7);
+      max-width: 900px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      margin: 30px auto;
+      border: 3px solid #9d2424;
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+    @keyframes pulseGlow {
+      0% { transform: scale(1); box-shadow: 0 15px 40px rgba(169, 20, 7, 0.7); }
+      50% { transform: scale(1.02); box-shadow: 0 20px 50px rgba(160, 21, 8, 0.9); }
+      100% { transform: scale(1); box-shadow: 0 15px 40px rgba(167, 20, 7, 0.7); }
+    }
+    h1 {
+      color: #831309;
+      font-family: 'Courier New', cursive;
+      font-size: 50px;
+      margin-bottom: 30px;
+      text-shadow: 3px 3px 10px rgba(203, 41, 26, 0.5);
+    }
+    .input-group {
+      margin: 20px 0;
+    }
+    input, select, textarea {
+      width: 85%;
+      padding: 12px;
+      border: 2px solid #831309;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      color: #831309;
+      transition: all 0.3s;
+      font-family: 'Dancing Script', cursive;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #831309;
+      box-shadow: 0 0 15px rgba(255, 79, 65, 0.6);
+    }
+    .hint {
+      font-size: 12px;
+      color: #ff8c82;
+      font-style: italic;
+      margin-top: 5px;
+    }
+    button {
+      background: linear-gradient(45deg, #cb1010, #cb0e24);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      margin: 15px 10px;
+      border-radius: 25px;
+      font-size: 18px;
+      font-family: 'Parisienne', cursive;
+      box-shadow: 0 5px 15px rgba(255, 111, 97, 0.6);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 111, 97, 0.8);
+    }
+    #output {
+      padding: 30px;
+      border-radius: 20px;
+      min-height: 350px;
+      text-align: left;
+      font-size: 20px;
+      line-height: 1.6;
+      margin-top: 30px;
+      white-space: pre-wrap;
+      color: #d94f46;
+      background: rgba(255, 255, 255, 0.9);
+      border: 3px dashed #ff9999;
+      box-shadow: 0 5px 20px rgba(255, 111, 97, 0.4);
+    }
+    #output:hover {
+      box-shadow: 0 10px 30px rgba(255, 111, 97, 0.6);
+    }
+    .parchment { 
+      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQynKcnHO6Miy5Kb33QQ7wGqZWPyfI_S2otPZHLdBnbmqBA2Yxqed8zlA&s=10') repeat; 
+      background-size: cover;
+      border: 3px solid #d4a017; 
+    }
+    .modern { 
+      background: #fff5f5; 
+      border: 3px dashed #ff6f61; 
+    }
+    .postcard { 
+      background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB0TVyYLljduIcjB4Z04gonLCY4ycADOfSKwbsDXSLpO_qGB53KYYF77MF&s=10') repeat; 
+      background-size: cover;
+      border: 3px solid #8b5e3c; 
+    }
+    .heart {
+      position: absolute;
+      color: #ff9999;
+      font-size: 40px;
+      opacity: 0.7;
+      animation: floatHearts 5s infinite ease-in-out;
+    }
+    .heart:nth-child(1) { left: 5%; top: 10%; animation-delay: 0s; }
+    .heart:nth-child(2) { right: 5%; top: 15%; animation-delay: 1s; }
+    .heart:nth-child(3) { left: 10%; bottom: 10%; animation-delay: 2s; }
+    .heart:nth-child(4) { right: 10%; bottom: 15%; animation-delay: 3s; }
+    @keyframes floatHearts {
+      0% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(-50px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 0.7; }
+    }
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    #compatibility-meter {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #ff6f61;
+      font-family: 'Comic Neue', sans-serif;
+      animation: pulseLove 2s infinite;
+    }
+    @keyframes pulseLove {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    #feedback-form {
+      margin-top: 20px;
+      display: none;
+    }
+    #feedback-form textarea {
+      width: 70%;
+      height: 80px;
+      font-family: 'Dancing Script', cursive;
+    }
+    .rose-petal {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: radial-gradient(circle, #ff6f61, #ff9999);
+      border-radius: 50% 0 50% 50%;
+      animation: fallPetal 6s infinite linear;
+    }
+    @keyframes fallPetal {
+      0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+  <div class="container">
+    <h1>Love Letter Maker</h1>
+    <button onclick="logout()" style="position: absolute; top: 15px; right: 15px; font-size: 14px;">Log Out</button>
+    <div class="input-group">
+      <input id="name" placeholder="Their Name (e.g., Emma)" required oninput="generateLetter()">
+    </div>
+    <div class="input-group">
+      <input id="sender" placeholder="Your Name (e.g., Alex)" required oninput="generateLetter()">
+    </div>
+    <div class="input-group">
+      <input id="adjectives" placeholder="Words for Them (e.g., sweet, cool)" oninput="generateLetter()">
+      <div class="hint">Use commas to separate</div>
+    </div>
+    <div class="input-group">
+      <input id="memory" placeholder="A Fun Memory (e.g., our first date)" oninput="generateLetter()">
+    </div>
+    <div class="input-group">
+      <select id="occasion" onchange="generateLetter()">
+        <option value="general">Just Because</option>
+        <option value="anniversary">Anniversary</option>
+        <option value="valentines">Valentine’s Day</option>
+        <option value="long-distance">Far Apart</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <select id="language" onchange="generateLetter()">
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+        <option value="fr">French</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <select id="tone" onchange="generateLetter(); updateEffects()">
+        <option value="romantic">Romantic</option>
+        <option value="poetic">Poetic</option>
+        <option value="funny">Funny</option>
+        <option value="classic">Classic</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <select id="font-style" onchange="updateFont()">
+        <option value="Dancing Script">Dancing Script</option>
+        <option value="Parisienne">Parisienne</option>
+        <option value="Comic Neue">Comic Neue</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Caveat">Caveat</option>
+        <option value="Shadows Into Light">Shadows Into Light</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <select id="style" onchange="updateStyle()">
+        <option value="modern">Modern Look</option>
+        <option value="parchment">Old Paper</option>
+        <option value="postcard">Postcard Vibe</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <select id="theme" onchange="updateTheme()">
+        <option value="default">Default</option>
+        <option value="valentines">Valantine’s</option>
+        <option value="christmas">Christmas</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <textarea id="signature" placeholder="Your Sign-Off (e.g., Love, Alex)" oninput="generateLetter()"></textarea>
+    </div>
+    <button onclick="generateLetter()">Make the Letter</button>
+    <button onclick="suggestPhrase()">Add a Line</button>
+    <button onclick="generatePoem()">Write a Poem</button>
+    <button onclick="addQuote()">Toss in a Quote</button>
+    <button onclick="readLetter()">Read It Out</button>
+    <div id="output"></div>
+    <div id="compatibility-meter"></div>
+    <button onclick="copyLetter()">Copy It</button>
+    <button onclick="downloadPDF()">Save as PDF</button>
+    <button onclick="sendEmail()">Email It</button>
+    <button onclick="shareSocial()">Share It</button>
+    <div id="feedback-form">
+      <textarea id="feedback" placeholder="What do you think?"></textarea>
+      <button onclick="submitFeedback()">Send Feedback</button>
+    </div>
+    <span class="heart">♥</span>
+    <span class="heart">♥</span>
+    <span class="heart">♥</span>
+    <span class="heart">♥</span>
+  </div>
+  <span class="rose-petal" style="left: 10%; animation-delay: 0s;"></span>
+  <span class="rose-petal" style="left: 30%; animation-delay: 2s;"></span>
+  <span class="rose-petal" style="left: 50%; animation-delay: 4s;"></span>
+  <span class="rose-petal" style="left: 70%; animation-delay: 6s;"></span>
+  <span class="rose-petal" style="left: 90%; animation-delay: 8s;"></span>
+
+  <audio id="bgMusic" loop></audio>
+
+  <script>
+    if (!localStorage.getItem("currentUser")) window.location.href = "index.html";
+
+    const fontMappings = {
+      "Dancing Script": "'Dancing Script', cursive",
+      "Parisienne": "'Parisienne', cursive",
+      "Comic Neue": "'Comic Neue', sans-serif",
+      "Times New Roman": "'Times New Roman', serif",
+      "Caveat": "'Caveat', cursive",
+      "Shadows Into Light": "'Shadows Into Light', cursive"
+    };
+
+    const templates = {
+      en: {
+        romantic: {
+          general: [
+            "Hey {name},\n\n" +
+            "I’ve been thinking about you a lot lately, and your {adjective1} vibe just gets me every time. You’ve got this {adjective2} way about you that makes my days so much better. Like, remember {memory}? That was one of those moments I’ll never get over—it’s stuck in my head like a favorite song. You’re my {randomRomantic}, the one who makes my heart do little flips.\n\n" +
+            "I love how you light up everything, even when we’re just chilling. Your smile’s my go-to happy place, and I can’t help but grin whenever you’re around. I keep thinking about all the little things—like how you make me laugh or just feel totally at ease. It’s the {adjective1} stuff about you that keeps me hooked, you know?\n\n" +
+            "I’m so into this thing we’ve got going, and I hope it keeps getting better. Picture us hanging out, sharing more {adjective2} moments, maybe sneaking off somewhere fun. You’re the best part of my world, {name}, and I’m all in for whatever’s next.\n\n" +
+            "{signature}"
+          ],
+          anniversary: [
+            "Hey {name},\n\n" +
+            "Another year with you, and your {adjective1} self still blows me away. We’ve had so many {adjective2} times together, and {memory} is one I’ll always hold onto—it’s like our little highlight reel. You’re my {randomRomantic}, the one who keeps this whole thing exciting and real.\n\n" +
+            "You’ve got this way of making everything feel right, even the messy days. I love how we can just be us, laughing over dumb stuff or getting lost in a moment. That {adjective1} spark you’ve got? It’s what keeps me coming back, every single time.\n\n" +
+            "Here’s to more years of us—more {adjective2} adventures, more late-night talks, more everything. You’re my favorite person, {name}, and I can’t wait to see what’s ahead with you.\n\n" +
+            "{signature}"
+          ],
+          valentines: [
+            "Hey {name},\n\n" +
+            "It’s Valentine’s, and your {adjective1} charm is all I can think about. You’ve got this {adjective2} thing going on that’s just irresistible. Thinking back to {memory}—man, that was a day that hit me right in the feels. You’re my {randomRomantic}, the one who makes my heart race every time.\n\n" +
+            "You’ve got this knack for making me smile, even when I don’t expect it. I love how your {adjective1} energy lights up my world, and I keep replaying all our little moments. It’s you—just you—that makes everything click for me.\n\n" +
+            "Let’s make this Valentine’s awesome with more {adjective2} vibes—maybe a cozy night or something spontaneous. You’re my person, {name}, and I’m so lucky to have you in my life.\n\n" +
+            "{signature}"
+          ],
+          "long-distance": [
+            "Hey {name},\n\n" +
+            "Even with all this distance, your {adjective1} self keeps me going. Your {adjective2} spirit somehow makes the miles feel smaller, and {memory} is one of those times I hold onto—it’s like you’re right here. You’re my {randomRomantic}, the one who keeps my heart warm no matter where I am.\n\n" +
+            "I miss you like crazy, but thinking about your {adjective1} laugh or the way you get me keeps me smiling. Every text or call is a little piece of you that brightens my day. It’s tough being apart, but you’re worth every second of it.\n\n" +
+            "Can’t wait ‘til we’re together again, making more {adjective2} memories. You’re my favorite, {name}, and I’m counting down the days ‘til I see you.\n\n" +
+            "{signature}"
+          ]
+        },
+        poetic: {
+          general: [
+            "Hey {name},\n\n" +
+            "You’re {adjective1} like the morning sun, brightening up everything around you. Your {adjective2} heart feels like a poem I can’t stop reading, and {memory} is a line I’ll never forget—it’s stuck with me like a perfect rhyme. You’re my {randomPoetic}, the muse that makes my world sing.\n\n" +
+            "Your voice flows like a soft wind, carrying little bits of magic my way. I love how your {adjective1} spirit paints my days with colors I didn’t even know existed. Every time I think of you, it’s like the stars line up just to spell out your name.\n\n" +
+            "Let’s keep writing our story, full of {adjective2} moments that feel like verses in a song. You’re my {name}, the one who turns my life into poetry, and I’m here for every word we share.\n\n" +
+            "{signature}"
+          ],
+          anniversary: [
+            "Hey {name},\n\n" +
+            "Another year down, and you’re still {adjective1} like the first day we met. Our time together’s been full of {adjective2} memories, and {memory} stands out like a perfect stanza in our story. You’re my {randomPoetic}, the rhythm that keeps my heart beating strong.\n\n" +
+            "You’ve got this {adjective1} glow that makes every moment feel special. I love how we’ve built something beautiful, like a poem that keeps getting better with every line. You’re the music in my quiet days, the spark in my nights.\n\n" +
+            "Here’s to more chapters with you—more {adjective2} lines and sweet rhymes. You’re my {name}, my forever inspiration, and I can’t wait to see where our poem takes us.\n\n" +
+            "{signature}"
+          ],
+          valentines: [
+            "Hey {name},\n\n" +
+            "It’s Valentine’s, and your {adjective1} soul is lighting up my world. You’ve got a {adjective2} way that feels like a love song, and {memory} is a verse I keep replaying—it’s pure magic. You’re my {randomPoetic}, the one who turns my days into poetry.\n\n" +
+            "Your smile’s like a star I can’t look away from, and your {adjective1} vibe just pulls me in. I catch myself thinking about you all the time, like you’re the chorus to my favorite tune. You make everything feel alive and bright.\n\n" +
+            "Let’s make this day sing with {adjective2} moments—something sweet and simple, just us. You’re my {name}, my heart’s melody, and I’m all about you today and always.\n\n" +
+            "{signature}"
+          ],
+          "long-distance": [
+            "Hey {name},\n\n" +
+            "Even far apart, you’re {adjective1} like a light I can always see. Your {adjective2} heart reaches me across the miles, and {memory} is a poem I keep close—it’s like you’re here. You’re my {randomPoetic}, the star that guides me through the distance.\n\n" +
+            "I miss hearing your {adjective1} laugh in person, but every message keeps me tied to you. It’s like you’ve written yourself into my days, a line of beauty I can’t shake. The wait’s hard, but you make it worth it.\n\n" +
+            "Someday soon, we’ll fill our story with {adjective2} rhymes again, up close. You’re my {name}, my faraway muse, and I’m holding on ‘til we’re together.\n\n" +
+            "{signature}"
+          ]
+        },
+        funny: {
+          general: [
+            "Hey {name},\n\n" +
+            "You’re so {adjective1}, it’s honestly unfair—I can’t keep a straight face around you! Your {adjective2} quirks are the best, and {memory} still cracks me up every time I think about it—what a wild ride. You’re my {randomFunny}, the one who keeps my life hilariously off-script.\n\n" +
+            "Your laugh’s like a sneak attack—I’m done for every time I hear it. I love how your {adjective1} weirdness turns even boring days into a comedy show. I’m always plotting ways to make you giggle, ‘cause that’s my win of the day.\n\n" +
+            "Let’s keep the {adjective2} chaos going—more laughs, more dumb moments, more us. You’re my {name}, my VIP of silliness, and I’m here for all the goofy stuff ahead.\n\n" +
+            "{signature}"
+          ],
+          anniversary: [
+            "Hey {name},\n\n" +
+            "Another year of your {adjective1} craziness, and I’m still loving it! We’ve had some {adjective2} times, and {memory} is peak us—total madness I wouldn’t trade for anything. You’re my {randomFunny}, the one who keeps this ride a blast.\n\n" +
+            "You’ve got this {adjective1} knack for making me laugh ‘til I can’t breathe. I love how we’re just a mess of fun together, tripping over life and cracking up about it. You’re my favorite kind of trouble, no question.\n\n" +
+            "Here’s to more {adjective2} years—more jokes, more epic fails, more you. You’re my {name}, my partner in crime, and I’m stoked for whatever’s next.\n\n" +
+            "{signature}"
+          ],
+          valentines: [
+            "Hey {name},\n\n" +
+            "Valentine’s with you is {adjective1} in the best way—I can’t stop grinning! Your {adjective2} vibe is unbeatable, and {memory} is proof we’re a hilarious duo. You’re my {randomFunny}, the one who makes my heart laugh out loud.\n\n" +
+            "You’ve got this {adjective1} charm that’s pure chaos, and I’m here for it. I love how you turn everything into a joke I can’t resist—seriously, you’re too much sometimes! Keeps me on my toes, and I dig it.\n\n" +
+            "Let’s make this day {adjective2} and fun—maybe some goofy plans, just us being us. You’re my {name}, my laugh buddy, and I’m all about you today.\n\n" +
+            "{signature}"
+          ],
+          "long-distance": [
+            "Hey {name},\n\n" +
+            "Even miles away, your {adjective1} silliness gets me every time. Your {adjective2} antics shine through, and {memory} is still the funniest thing—I can’t wait to relive that in person. You’re my {randomFunny}, keeping me laughing no matter the distance.\n\n" +
+            "Your texts are gold—I’m over here cracking up at your {adjective1} randomness. I miss your goofy face, but you’ve got a way of making me feel close even when you’re not. You’re the best kind of crazy.\n\n" +
+            "Can’t wait to team up for more {adjective2} shenanigans soon. You’re my {name}, my far-off funny bone, and I’m holding out for the next laugh with you.\n\n" +
+            "{signature}"
+          ]
+        },
+        classic: {
+          general: [
+            "Dear {name},\n\n" +
+            "Your {adjective1} way has a hold on me I can’t shake—it’s the real deal. There’s something {adjective2} about you that feels like home, and {memory} is one of those times I’ll always keep close. You’re my {randomClassic}, the one who makes everything steady and good.\n\n" +
+            "I love how you’ve got this {adjective1} calm that pulls me in. Your smile’s my safe spot, and I catch myself thinking about you when things get quiet. You’ve got a way of making life sweeter, just by being you.\n\n" +
+            "Here’s to us sticking together, with more {adjective2} days ahead. You’re my {name}, my rock, and I’m all about building more with you.\n\n" +
+            "{signature}"
+          ],
+          anniversary: [
+            "Dear {name},\n\n" +
+            "Another year with you, and your {adjective1} heart still gets me every time. We’ve had some {adjective2} moments, and {memory} is one I’ll never let go of—it’s us at our best. You’re my {randomClassic}, the one who keeps this love solid.\n\n" +
+            "You’ve got this {adjective1} strength that I lean on, and I love how we just fit. The way you look at me, the little things we share—it’s all gold. You make the years feel like a gift I didn’t know I’d get.\n\n" +
+            "Let’s keep going, piling up more {adjective2} times together. You’re my {name}, my forever pick, and I’m in it with you for the long haul.\n\n" +
+            "{signature}"
+          ],
+          valentines: [
+            "Dear {name},\n\n" +
+            "It’s Valentine’s, and your {adjective1} soul is all I need to feel complete. You’ve got this {adjective2} charm that’s timeless, and {memory} is a moment I’ll always treasure—it’s pure us. You’re my {randomClassic}, the one who keeps my heart steady.\n\n" +
+            "Your {adjective1} warmth is my favorite thing—it’s like a hug I can always count on. I love how you make every day feel special, just by being around. You’re the kind of love that sticks with me.\n\n" +
+            "Let’s make this day {adjective2} and sweet—something simple, just for us. You’re my {name}, my true north, and I’m so glad you’re mine.\n\n" +
+            "{signature}"
+          ],
+          "long-distance": [
+            "Dear {name},\n\n" +
+            "Even with the miles, your {adjective1} spirit keeps me grounded. Your {adjective2} heart shines through, and {memory} is one of those times I cling to—it’s like you’re right here. You’re my {randomClassic}, the one who keeps me steady from afar.\n\n" +
+            "I miss your {adjective1} presence, but every little note from you feels like a piece of home. You’ve got a way of making the distance bearable, and I’m holding onto that. You’re my anchor, even from way out there.\n\n" +
+            "Here’s to closing the gap soon, with more {adjective2} days together. You’re my {name}, my faraway best, and I’m waiting for you.\n\n" +
+            "{signature}"
+          ]
+        }
+      },
+      es: {
+        romantic: {
+          general: [
+            "Hola {name},\n\n" +
+            "Últimamente pienso mucho en ti, y tu vibra {adjective1} me atrapa siempre. Tienes una forma {adjective2} de alegrarme los días. ¿Te acuerdas de {memory}? Eso no se me va de la cabeza, como una canción favorita. Eres mi {randomRomantic}, quien hace que mi corazón dé saltitos.\n\n" +
+            "Me encanta cómo iluminas todo, incluso cuando solo estamos relajados. Tu sonrisa es mi lugar feliz, y no puedo evitar sonreír cuando estás cerca. Siempre pienso en las pequeñas cosas—como tus risas o cómo me haces sentir tan cómodo. Es lo {adjective1} de ti lo que me tiene enganchado.\n\n" +
+            "Estoy tan metido en esto que tenemos, y espero que siga creciendo. Imagínanos pasando tiempo juntos, con más momentos {adjective2}, tal vez escapándonos a algún lado. Eres lo mejor de mi mundo, {name}, y estoy listo para lo que venga.\n\n" +
+            "{signature}"
+          ]
+        }
+      },
+      fr: {
+        romantic: {
+          general: [
+            "Salut {name},\n\n" +
+            "Je pense souvent à toi ces jours-ci, et ton côté {adjective1} me touche à chaque fois. Tu as une manière {adjective2} qui rend mes journées tellement mieux. Tu te souviens de {memory} ? C’est un moment que je n’oublierai jamais, comme une chanson qui reste en tête. Tu es mon {randomRomantic}, celui qui fait battre mon cœur un peu plus vite.\n\n" +
+            "J’adore comment tu rends tout lumineux, même quand on traîne juste. Ton sourire, c’est mon refuge, et je souris bêtement dès que tu es là. Je repense à tous ces petits trucs—like comment tu me fais rire ou me mets à l’aise. C’est ton côté {adjective1} qui me tient accroché.\n\n" +
+            "Je suis tellement dedans, notre truc, et j’espère que ça va continuer à grandir. Imagine-nous, passant du temps ensemble, avec plus de moments {adjective2}, peut-être une petite escapade. Tu es le meilleur dans mon monde, {name}, et je suis prêt pour la suite avec toi.\n\n" +
+            "{signature}"
+          ]
+        }
+      }
+    };
+
+    const extras = {
+      romantic: ["best thing ever", "heart’s pick", "dream come true", "favorite person"],
+      poetic: ["guiding light", "sweet rhyme", "starry muse", "gentle song"],
+      funny: ["laugh machine", "silly sidekick", "goofy gem", "chaos pal"],
+      classic: ["steady rock", "true heart", "best mate", "forever one"]
+    };
+
+    const quotes = [
+      "Love’s the best when it’s you and me. - Someone Smart",
+      "You’re my favorite hello and hardest goodbye. - Unknown",
+      "My heart’s yours, always has been. - Classic Lover"
+    ];
+
+    const musicFiles = {
+      romantic: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Scott_Holmes/Inspirational_Background_Music/Scott_Holmes_-_Romantic_Guitar.mp3",
+      poetic: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Classical_Sampler/Kevin_MacLeod_-_Canon_in_D_Major.mp3",
+      funny: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Jahzzar/Jahzzar_-_Siesta/Jahzzar_-_05_-_Siesta.mp3",
+      classic: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Podington_Bear/Solo_Guitar/Podington_Bear_-_Gentle_Marimbas.mp3"
+    };
+
+    const particleConfigs = {
+      romantic: { particles: { number: { value: 50 }, shape: { type: "heart" }, color: { value: "#ff3030" }, move: { speed: 1 } } },
+      poetic: { particles: { number: { value: 30 }, shape: { type: "star" }, color: { value: "#ff3030" }, move: { speed: 0.5 } } },
+      funny: { particles: { number: { value: 70 }, shape: { type: "circle" }, color: { value: "#ff0000" }, move: { speed: 2 } } },
+      classic: { particles: { number: { value: 40 }, shape: { type: "heart" }, color: { value: "#ff2400" }, move: { speed: 0.8 } } }
+    };
+
+    const themeStyles = {
+      default: { heartColor: "#ff9999" },
+      valentines: { heartColor: "#ff1493" },
+      christmas: { heartColor: "#ff0000" }
+    };
+
+    function generateLetter() {
+      const name = document.getElementById("name").value || "cutie";
+      const sender = document.getElementById("sender").value || "me";
+      const adjectivesInput = document.getElementById("adjectives").value.split(",");
+      const memory = document.getElementById("memory").value || "that one time";
+      const occasion = document.getElementById("occasion").value;
+      const tone = document.getElementById("tone").value;
+      const language = document.getElementById("language").value;
+      const signature = document.getElementById("signature").value || `Love,\n${sender}`;
+
+      const adjectives = adjectivesInput.filter(adj => adj.trim());
+      const adjective1 = adjectives[0] || "awesome";
+      const adjective2 = adjectives[1] || "great";
+
+      const templateList = templates[language][tone][occasion] || templates.en.romantic.general;
+      const randomTemplate = templateList[Math.floor(Math.random() * templateList.length)];
+      const extraList = extras[tone];
+      const randomExtra = extraList[Math.floor(Math.random() * extraList.length)];
+
+      const letter = randomTemplate
+        .replaceAll("{name}", name)
+        .replace("{sender}", sender)
+        .replace("{adjective1}", adjective1)
+        .replace("{adjective2}", adjective2)
+        .replace("{memory}", memory)
+        .replace("{random" + tone.charAt(0).toUpperCase() + tone.slice(1) + "}", randomExtra)
+        .replace("{signature}", signature);
+
+      document.getElementById("output").textContent = letter;
+      saveLetter(letter);
+      document.getElementById("feedback-form").style.display = "block";
+      updateFont();
+    }
+
+    function copyLetter() {
+      const text = document.getElementById("output").textContent;
+      if (text) navigator.clipboard.writeText(text).then(() => alert("Copied to your clipboard!"));
+      else alert("Make a letter first!");
+    }
+
+    function downloadPDF() {
+      const text = document.getElementById("output").textContent;
+      if (!text) {
+        alert("Make a letter first!");
+        return;
+      }
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const style = document.getElementById("style").value;
+
+      doc.setTextColor(217, 79, 70);
+      doc.setFontSize(12);
+
+      if (style === "parchment") {
+        doc.setFillColor(245, 232, 199);
+        doc.rect(0, 0, 210, 297, "F");
+        doc.setDrawColor(212, 160, 23);
+        doc.rect(5, 5, 200, 287);
+      } else if (style === "postcard") {
+        doc.setFillColor(240, 228, 215);
+        doc.rect(0, 0, 210, 297, "F");
+        doc.setDrawColor(139, 94, 60);
+        doc.rect(5, 5, 200, 287);
+      } else {
+        doc.setFillColor(255, 245, 245);
+        doc.rect(0, 0, 210, 297, "F");
+        doc.setDrawColor(255, 111, 97);
+        doc.line(10, 10, 200, 10);
+        doc.line(10, 287, 200, 287);
+      }
+
+      doc.text(doc.splitTextToSize(text, 180), 15, 20);
+      doc.save("love-letter.pdf");
+    }
+
+    function readLetter() {
+      const text = document.getElementById("output").textContent;
+      if (text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.9;
+        utterance.pitch = document.getElementById("tone").value === "funny" ? 1.3 : 1.1;
+        window.speechSynthesis.speak(utterance);
+      } else alert("Make a letter first to hear it!");
+    }
+
+    function suggestPhrase() {
+      const phrases = [
+        "You make my days way better.",
+        "I’m kinda obsessed with your smile.",
+        "You’re the coolest part of my life."
+      ];
+      document.getElementById("output").textContent += `\n\n${phrases[Math.floor(Math.random() * phrases.length)]}`;
+    }
+
+    function generatePoem() {
+      const poem = `
+Roses are red, you’re {adjective1} too,
+{memory}’s the day I got stuck on you,
+My heart’s all yours, it’s plain to see,
+You’re the best thing that’s happened to me.
+      `;
+      const adj = document.getElementById("adjectives").value.split(",")[0] || "cool";
+      const mem = document.getElementById("memory").value || "that day";
+      document.getElementById("output").textContent += `\n\n${poem.replace("{adjective1}", adj).replace("{memory}", mem)}`;
+    }
+
+    function addQuote() {
+      document.getElementById("output").textContent += `\n\n"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+    }
+
+    function calculateCompatibility() {
+      const name = document.getElementById("name").value || "cutie";
+      const sender = document.getElementById("sender").value || "me";
+      const score = Math.max(50, (name.length * sender.length) % 101);
+      document.getElementById("compatibility-meter").textContent = `Match Score: ${score}% 💖`;
+    }
+
+    function updateEffects() {
+      const tone = document.getElementById("tone").value;
+      const audio = document.getElementById("bgMusic");
+      audio.src = musicFiles[tone];
+      audio.volume = 0.2;
+      audio.play().catch(() => console.log("Music didn’t play"));
+      particlesJS("particles-js", particleConfigs[tone]);
+    }
+
+    function updateStyle() {
+      document.getElementById("output").className = document.getElementById("style").value;
+    }
+
+    function updateFont() {
+      const font = document.getElementById("font-style").value;
+      document.getElementById("output").style.fontFamily = fontMappings[font];
+    }
+
+    function updateTheme() {
+      const theme = document.getElementById("theme").value;
+      document.querySelectorAll(".heart").forEach(heart => heart.style.color = themeStyles[theme].heartColor);
+    }
+
+    function sendEmail() {
+      const text = document.getElementById("output").textContent;
+      if (text) {
+        const subject = encodeURIComponent("A Sweet Love Letter");
+        const body = encodeURIComponent(text);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+      } else {
+        alert("Make a letter first!");
+      }
+    }
+
+    function shareSocial() {
+      const text = document.getElementById("output").textContent;
+      if (text) {
+        const encodedText = encodeURIComponent(text);
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedText}`;
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedText}`;
+        const shareWindow = window.open("", "_blank", "width=600,height=400");
+        shareWindow.document.write(`
+          <h3>Share Your Letter</h3>
+          <p><a href="${twitterUrl}" target="_blank">Share on Twitter</a></p>
+          <p><a href="${whatsappUrl}" target="_blank">Share on WhatsApp</a></p>
+          <button onclick="window.close()">Close</button>
+        `);
+      } else {
+        alert("Make a letter first!");
+      }
+    }
+
+    function submitFeedback() {
+      const feedback = document.getElementById("feedback").value;
+      if (feedback) {
+        alert("Thanks for the feedback: " + feedback);
+        document.getElementById("feedback").value = "";
+        document.getElementById("feedback-form").style.display = "none";
+      }
+    }
+
+    function saveLetter(letter) {
+      const user = localStorage.getItem("currentUser");
+      const userData = JSON.parse(localStorage.getItem(user));
+      userData.letters.push({ date: new Date().toISOString(), content: letter });
+      localStorage.setItem(user, JSON.stringify(userData));
+    }
+
+    function logout() {
+      localStorage.removeItem("currentUser");
+      window.location.href = "index.html";
+    }
+
+    // Initialize
+    generateLetter();
+    updateEffects();
+    updateStyle();
+    updateFont();
+    updateTheme();
+    calculateCompatibility();
+  </script>
+</body>
+</html>
