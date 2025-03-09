@@ -28,21 +28,21 @@ Browser DevTools (debugging)
 Implementation:
 
 Installation:
-# Clone the repo
+Clone the repo
 git clone https://github.com/[your-username]/heartstrings.git
 
-# Navigate to the project folder
+Navigate to the project folder
 cd heartstrings
 
 Run:
-# Open index.html in a browser (no server needed)
-# On macOS:
+Open index.html in a browser (no server needed)
+On macOS:
 open index.html
 
-# On Windows:
+On Windows:
 start index.html
 
-# Or just double-click index.html in your file explorer
+Or just double-click index.html in your file explorer
 
 Screenshots:
 
