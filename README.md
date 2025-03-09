@@ -7,6 +7,7 @@ Team Name: Kestrel
 Team Members:
 
 Member 1: Parvathy Krishna M - Jyothi Engineering College, Cheruthuruthy - Designed the UI, implemented core letter generation logic, and added sharing features.
+
 Member 2: Adwaid Pola - Government College of Engineering,Kannur - Handled styling, background textures, and animations (hearts, petals).
 
 Project Description:
@@ -61,6 +62,6 @@ The sharing options in action—copy, PDF, email, and social buttons after gener
 Project Demo:
 Video:
 
-
+https://github.com/user-attachments/assets/fecc52be-b50f-4f66-92d8-a35ec2a37da2
 
 Explanation: The video walks through creating a romantic letter, switching styles to old paper, and sharing it via email—showing off the full flow from input to output.
