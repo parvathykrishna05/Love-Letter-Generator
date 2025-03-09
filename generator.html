@@ -466,36 +466,35 @@
     function generateLetter() {
       const name = document.getElementById("name").value || "cutie";
       const sender = document.getElementById("sender").value || "me";
-      const adjectivesInput = document.getElementById("adjectives").value.split(",");
+      const adjectivesInput = document.getElementById("adjectives").value || "";
+      const adjectives = (adjectivesInput ? adjectivesInput.split(",").map(adj => adj.trim()).filter(adj => adj) : ["beautiful", "sweet"]);
+      const adjective1 = adjectives[0] || "beautiful";
+      const adjective2 = adjectives[1] || "sweet";
       const memory = document.getElementById("memory").value || "that one time";
       const occasion = document.getElementById("occasion").value;
       const tone = document.getElementById("tone").value;
       const language = document.getElementById("language").value;
       const signature = document.getElementById("signature").value || `Love,\n${sender}`;
 
-      const adjectives = adjectivesInput.filter(adj => adj.trim());
-      const adjective1 = adjectives[0] || "awesome";
-      const adjective2 = adjectives[1] || "great";
-
       const templateList = templates[language][tone][occasion] || templates.en.romantic.general;
       const randomTemplate = templateList[Math.floor(Math.random() * templateList.length)];
       const extraList = extras[tone];
       const randomExtra = extraList[Math.floor(Math.random() * extraList.length)];
 
-      const letter = randomTemplate
+      let letter = randomTemplate
         .replaceAll("{name}", name)
-        .replace("{sender}", sender)
-        .replace("{adjective1}", adjective1)
-        .replace("{adjective2}", adjective2)
-        .replace("{memory}", memory)
-        .replace("{random" + tone.charAt(0).toUpperCase() + tone.slice(1) + "}", randomExtra)
-        .replace("{signature}", signature);
+        .replaceAll("{sender}", sender)
+        .replaceAll("{adjective1}", adjective1)
+        .replaceAll("{adjective2}", adjective2)
+        .replaceAll("{memory}", memory)
+        .replaceAll("{random" + tone.charAt(0).toUpperCase() + tone.slice(1) + "}", randomExtra)
+        .replaceAll("{signature}", signature);
 
       document.getElementById("output").textContent = letter;
       saveLetter(letter);
       document.getElementById("feedback-form").style.display = "block";
       updateFont();
-    }
+  }
 
     function copyLetter() {
       const text = document.getElementById("output").textContent;
